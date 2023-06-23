@@ -710,3 +710,8 @@ def round(x, decimals=0, /):
 @to_ivy_arrays_and_back
 def conjugate(x, /):
     return ivy.conj(x)
+
+
+@to_ivy_arrays_and_back
+def gradient(f, *varargs, axis=None, edge_order=None):
+    return ivy.gradient(f, spacing=varargs, edge_order=edge_order, axis=axis)

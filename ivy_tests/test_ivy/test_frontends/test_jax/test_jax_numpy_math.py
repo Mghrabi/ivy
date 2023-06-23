@@ -2974,3 +2974,41 @@ def test_jax_numpy_conjugate(
         on_device=on_device,
         x=x[0],
     )
+
+
+# @handle_frontend_test(
+#     fn_tree="jax.numpy.gradient",
+#     dtype_and_x=helpers.dtype_and_values(
+#         available_dtypes=helpers.get_dtypes("float"),
+#         # num_arrays=2,
+#         # min_num_dims=1,
+#         # max_num_dims=1,
+#         min_dim_size=2,
+#         min_value=-1e04,
+#         max_value=1e04,
+#     ),
+#     trim=st.booleans(),
+# )
+# def test_jax_numpy_polymul(
+#     *,
+#     dtype_and_x,
+#     trim,
+#     test_flags,
+#     on_device,
+#     fn_tree,
+#     frontend,
+# ):
+#     input_dtype, x = dtype_and_x
+#     assume("float16" not in input_dtype)
+#     helpers.test_frontend_function(
+#         input_dtypes=input_dtype,
+#         test_flags=test_flags,
+#         frontend=frontend,
+#         fn_tree=fn_tree,
+#         on_device=on_device,
+#         a1=x[0],
+#         a2=x[1],
+#         trim_leading_zeros=trim,
+#         atol=1e-05,
+#         rtol=1e-03,
+#     )
