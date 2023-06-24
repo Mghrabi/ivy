@@ -31,3 +31,9 @@ def nanquantile(a, q, axis=None, keepdims=False, interpolation="linear", out=Non
     return ivy.nanquantile(
         a, q, axis=axis, keepdims=keepdims, interpolation=interpolation, out=out
     )
+
+@with_unsupported_dtypes({"2.5.0 and below": "complex"}, "paddle")
+@to_ivy_arrays_and_back
+def median(x, /, *, axis=None, keepdim=False, name=None):
+    ret = ivy.median(x, axis=axis, keepdims=keepdim)
+    return ivy.expand_dims(ret, axis=-1) if ret.ndim == 0 else ret
