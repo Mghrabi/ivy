@@ -23,3 +23,10 @@ def numel(x, name=None):
     except (ValueError, TypeError):
         length = 1  # if 0 dimensional tensor with 1 element
     return ivy.array([prod if prod > 0 else ivy.array(length, dtype=ivy.int64)])
+
+
+@with_unsupported_dtypes({"2.5.0 and below": "complex"}, "paddle")
+@to_ivy_arrays_and_back
+def median(x, /, *, axis=None, keepdim=False, name=None):
+    ret = ivy.median(x, axis=axis, keepdims=keepdim)
+    return ivy.expand_dims(ret, axis=-1) if ret.ndim == 0 else ret
