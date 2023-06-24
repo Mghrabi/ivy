@@ -30,3 +30,11 @@ def numel(x, name=None):
 def median(x, /, *, axis=None, keepdim=False, name=None):
     ret = ivy.median(x, axis=axis, keepdims=keepdim)
     return ivy.expand_dims(ret, axis=-1) if ret.ndim == 0 else ret
+
+
+@with_unsupported_dtypes({"2.4.2 and below": ("float16", "bfloat16")}, "paddle")
+@to_ivy_arrays_and_back
+def nanquantile(a, q, axis=None, keepdims=False, interpolation="linear", out=None):
+    return ivy.nanquantile(
+        a, q, axis=axis, keepdims=keepdims, interpolation=interpolation, out=out
+    )

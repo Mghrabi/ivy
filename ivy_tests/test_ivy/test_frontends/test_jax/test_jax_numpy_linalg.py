@@ -780,12 +780,13 @@ def _get_inv_square_matrices(draw):
             helpers.array_values(
                 dtype=input_dtype[0],
                 shape=shape,
-                min_value=-100,
-                max_value=100,
+                large_abs_safety_factor=24,
+                small_abs_safety_factor=24,
+                safety_factor_scale="log",
             )
         )
         try:
-            np.linalg.inv(a)
+            np.linalg.tensorinv(a, ind)
             invertible = True
         except np.linalg.LinAlgError:
             pass
@@ -794,7 +795,8 @@ def _get_inv_square_matrices(draw):
 
 
 @handle_frontend_test(
-    fn_tree="jax.numpy.linalg.tensorinv", params=_get_inv_square_matrices()
+    fn_tree="jax.numpy.linalg.tensorinv",
+    params=_get_inv_square_matrices()
 )
 def test_jax_numpy_tensorinv(
     *,
@@ -820,24 +822,18 @@ def test_jax_numpy_tensorinv(
 
 @handle_frontend_test(
     fn_tree="jax.numpy.linalg.cond",
-    dtype_and_x=helpers.dtype_and_values(
-        available_dtypes=helpers.get_dtypes("float"),
-        allow_nan=True,
-        min_num_dims=2,
-    ).filter(lambda x: "float16" not in x[0] and "bfloat16" not in x[0]),
-    p=st.sampled_from([None, "fro", np.inf, -np.inf, 1, -1, 2, -2]),
+    dtype_x_p=helpers.cond_data_gen_helper(),
     test_with_out=st.just(False),
 )
 def test_jax_numpy_cond(
     *,
-    dtype_and_x,
-    p,
+    dtype_x_p,
     test_flags,
     on_device,
     fn_tree,
     frontend,
 ):
-    dtype, x = dtype_and_x
+    dtype, x = dtype_x_p
     helpers.test_frontend_function(
         input_dtypes=dtype,
         test_flags=test_flags,
@@ -847,5 +843,5 @@ def test_jax_numpy_cond(
         fn_tree=fn_tree,
         on_device=on_device,
         x=x[0],
-        p=p,
+        p=x[1],
     )
