@@ -65,6 +65,36 @@ def test_paddle_numel(
     )
 
 
+# median
+@handle_frontend_test(
+    fn_tree="paddle.median",
+    dtype_and_x=_statistical_dtype_values(function="median"),
+    keepdim=st.booleans(),
+    test_with_out=st.just(True),
+)
+def test_paddle_median(
+    *,
+    dtype_and_x,
+    keepdim,
+    on_device,
+    fn_tree,
+    frontend,
+    test_flags,
+):
+    input_dtype, x, axis = dtype_and_x
+    test_flags.num_positional_args = len(dtype_and_x) - 2
+    helpers.test_frontend_function(
+        input_dtypes=input_dtype,
+        frontend=frontend,
+        test_flags=test_flags,
+        fn_tree=fn_tree,
+        on_device=on_device,
+        input=x[0],
+        axis=axis,
+        keepdim=keepdim,
+    )
+
+
 @handle_frontend_test(
     fn_tree="paddle.nanquantile",
     dtype_and_x=_statistical_dtype_values(function="nanquantile"),
